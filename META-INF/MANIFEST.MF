@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.sugarj.java
-Bundle-SymbolicName: org.sugarj.java;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Name: org.sugarj.language.java
+Bundle-SymbolicName: org.sugarj.language.java;singleton:=true
+Bundle-Version: 1.2.0.qualifier
 Export-Package: org.sugarj,
  org.sugarj.java.init,
  org.sugarj.languages
@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.spoofax.terms,
  org.strategoxt.strj,
- org.sugarj.languagelib,
- org.sugarj.common
-Eclipse-RegisterBuddy: org.sugarj.languagelib
+ org.sugarj.common,
+ org.sugarj.baselang
+Eclipse-RegisterBuddy: org.sugarj.baselang
