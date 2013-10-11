@@ -103,7 +103,7 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
     String decName = Term.asJavaString(dec.getSubterm(0).getSubterm(1).getSubterm(0));
     String expectedDecName = FileCommands.fileName(javaOutFile);
     if (expectedDecName != null && !expectedDecName.equals(decName))
-      throw new RuntimeException("Declaration name '" + decName + "'" + " does not match the file name '" + expectedDecName + "'.");
+      ATermCommands.setErrorMessage(toplevelDecl, "Declaration name '" + decName + "'" + " does not match the file name '" + expectedDecName + "'.");
 
     body.add(prettyPrint(dec));
     
