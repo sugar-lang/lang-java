@@ -16,3 +16,4 @@ Require-Bundle: org.eclipse.ui,
  org.sugarj.common,
  org.sugarj.baselang
 Eclipse-RegisterBuddy: org.sugarj.baselang
+Eclipse-BundleShape: dir
