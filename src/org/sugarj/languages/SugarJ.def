@@ -69,4 +69,6 @@ exports
     "import" ImportAs? TransformationAppExpr ";" -> JavaImportDec {cons("TransImportDec")}
     "import" ImportAs  ModuleName            ";" -> JavaImportDec {cons("TypeImportAsDec")}
  
+    "export" JavaId "=" ModuleName ";" -> JavaImportDec {cons("TypeExportDec")}
+    "export" JavaId "=" TransformationAppExpr ";" -> JavaImportDec {cons("TransExportDec")}
 

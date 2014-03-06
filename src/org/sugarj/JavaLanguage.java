@@ -153,8 +153,13 @@ public class JavaLanguage extends AbstractBaseLanguage {
   }
 
   @Override
-  public boolean isTransformationApplication(IStrategoTerm decl) {
+  public boolean isTransformationImport(IStrategoTerm decl) {
     return isApplication(decl, "TransImportDec");
+  }
+  
+  @Override
+  public boolean isExportDecl(IStrategoTerm decl) {
+    return isApplication(decl, "TypeExportDec") || isApplication(decl, "TransExportDec");
   }
 
   @Override
@@ -180,6 +185,13 @@ public class JavaLanguage extends AbstractBaseLanguage {
     IStrategoTerm head = getApplicationSubterm(decl, "ModelDec", 0);
     String extName = prettyPrint(getApplicationSubterm(head, "ModelDecHead", 1));
     return extName;
+  }
+  
+  @Override
+  public String getExportName(IStrategoTerm decl) {
+    IStrategoTerm id = decl.getSubterm(0);
+    String name = prettyPrint(id);
+    return name;
   }
 
   private static void exists(Path file) {

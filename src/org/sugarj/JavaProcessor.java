@@ -9,8 +9,10 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.spoofax.interpreter.terms.IStrategoTerm;
+import org.spoofax.interpreter.terms.ITermFactory;
 import org.spoofax.terms.Term;
 import org.strategoxt.HybridInterpreter;
 import org.sugarj.common.ATermCommands;
@@ -39,11 +41,11 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
 
   private Path sourcePath;
 
-  private void checkPackageName(IStrategoTerm toplevelDecl, RelativePath sourceFile) {
-    if (sourceFile != null) {
+  private void checkPackageName(IStrategoTerm toplevelDecl, String modulePath) {
+    if (modulePath != null) {
       String packageName = relPackageName == null ? "" : relPackageName.replace('/', '.');
 
-      String rel = FileCommands.dropExtension(sourceFile.getRelativePath());
+      String rel = FileCommands.dropExtension(modulePath);
       int i = rel.lastIndexOf('/');
       String expectedPackage = i >= 0 ? rel.substring(0, i) : rel;
       expectedPackage = expectedPackage.replace('/', '.');
@@ -61,6 +63,10 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
     else if (isApplication(toplevelDecl, "TypeImportAsDec"))
       name = prettyPrint(toplevelDecl.getSubterm(1));
     else if (isApplication(toplevelDecl, "TransImportDec"))
+      name = getTransformedModulePath(toplevelDecl.getSubterm(1));
+    else if (isApplication(toplevelDecl, "TypeExportDec"))
+      name = prettyPrint(toplevelDecl.getSubterm(1));
+    else if (isApplication(toplevelDecl, "TransExportDec"))
       name = getTransformedModulePath(toplevelDecl.getSubterm(1));
     return name;
   }
@@ -118,10 +124,10 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
 
     log.log("The SDF / Stratego package name is '" + relPackageName + "'.", Log.DETAIL);
 
-    checkPackageName(toplevelDecl, sourceFile);
+    checkPackageName(toplevelDecl, sourceFile.getRelativePath());
 
     if (javaOutFile == null)
-      javaOutFile = environment.createOutPath(getRelativeNamespaceSep() + FileCommands.fileName(sourceFile) + "." + JavaLanguage.getInstance().getBaseFileExtension()); // XXX:
+      javaOutFile = environment.createOutPath(getRelativeNamespaceSep() + FileCommands.fileName(sourceFile.getRelativePath()) + "." + JavaLanguage.getInstance().getBaseFileExtension()); // XXX:
                                               
     // moved here before depOutFile==null check
     moduleHeader = prettyPrint(toplevelDecl);
@@ -132,14 +138,18 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
   }
 
   @Override
-  public void init(RelativePath sourceFile, Environment environment) {
+  public void init(Set<RelativePath> sourceFiles, Environment environment) {
+    if (sourceFiles.size() != 1)
+      throw new IllegalArgumentException("Fomega can only compile one source file at a time.");
+
     this.environment = environment;
-    this.sourceFile = sourceFile;
+    this.sourceFile = sourceFiles.iterator().next();
     javaOutFile = environment.createOutPath(FileCommands.dropExtension(sourceFile.getRelativePath()) + "." + JavaLanguage.getInstance().getBaseFileExtension());
     
-    for (Path dir : environment.getSourcePath())
-      if (sourceFile.getBasePath().equals(dir))
-        sourcePath = dir;
+    // FIXME
+//    for (Path dir : environment.getSourcePath())
+//      if (modulePath.getBasePath().equals(dir))
+//        sourcePath = dir;
   }
 
   @Override
@@ -176,6 +186,8 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
   
   @Override
   public IStrategoTerm reconstructImport(String modulePath, IStrategoTerm decl) {
+    modulePath = modulePath.replace("/", ".").replace("\\", ".");
+    
     IStrategoTerm localName = null;
     if (isApplication(decl, "TransImportDec")) 
       localName = getApplicationSubterm(decl, "TransImportDec", 0);
@@ -203,7 +215,21 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
       return null;
     return module.replace(".", Environment.sep);
   }
-
+  
+  @Override
+  public IStrategoTerm getImportForExport(IStrategoTerm export) {
+    if (isApplication(export, "TypeExportDec"))
+      return ATermCommands.makeAppl("TypeImportDec", "TypeImportDec", 1, export.getSubterm(1));
+    
+    ITermFactory factory = ATermCommands.factory;
+    if (isApplication(export, "TransExportDec"))
+      return ATermCommands.makeAppl("TransImportDec", "TransImportDec", 2,
+               factory.makeAppl(factory.makeConstructor("None", 0), new IStrategoTerm[0]),
+               export.getSubterm(1));
+    
+    return null;
+  }
+  
   @Override
   public void processModuleImport(IStrategoTerm toplevelDecl) throws IOException {
     imports.add(prettyPrint(toplevelDecl));
