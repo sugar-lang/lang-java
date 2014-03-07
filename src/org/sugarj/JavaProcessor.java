@@ -189,20 +189,22 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
     modulePath = modulePath.replace("/", ".").replace("\\", ".");
     
     IStrategoTerm localName = null;
-    if (isApplication(decl, "TransImportDec")) 
-      localName = getApplicationSubterm(decl, "TransImportDec", 0);
-    else if (isApplication(decl, "TypeImportAsDec"))
-      localName = getApplicationSubterm(decl, "TypeImportAsDec", 0);
+//    if (isApplication(decl, "TransImportDec")) 
+//      localName = getApplicationSubterm(decl, "TransImportDec", 0);
+//    else if (isApplication(decl, "TypeImportAsDec"))
+//      localName = getApplicationSubterm(decl, "TypeImportAsDec", 0);
     
     if (localName == null || isApplication(localName, "None"))
       return
         ATermCommands.makeAppl("TypeImportDec", "TypeImportDec", 1, 
           ATermCommands.makeAppl("Id", "Id", 1, ATermCommands.makeString(modulePath)));
 
-    return 
-      ATermCommands.makeAppl("TypeImportAsDec", "TypeImportAsDec", 2,
-        localName,
-        ATermCommands.makeAppl("Id", "Id", 1, ATermCommands.makeString(modulePath)));
+    return null;
+    
+//    return 
+//      ATermCommands.makeAppl("TypeImportAsDec", "TypeImportAsDec", 2,
+//        localName,
+//        ATermCommands.makeAppl("Id", "Id", 1, ATermCommands.makeString(modulePath)));
   }
   
   @Override
