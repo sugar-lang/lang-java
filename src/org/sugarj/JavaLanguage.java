@@ -172,7 +172,7 @@ public class JavaLanguage extends AbstractBaseLanguage {
    * 
    * @param aterm
    */
-  protected String prettyPrint(IStrategoTerm term) {
+  protected synchronized String prettyPrint(IStrategoTerm term) {
     IStrategoTerm string = pp_java_string_0_0.instance.invoke(javaFronCtx, term);
     if (string != null)
       return Term.asJavaString(string);
