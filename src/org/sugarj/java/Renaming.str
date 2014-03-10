@@ -20,7 +20,8 @@ rules
   rename-modeldec(|renamings) = oncetd( \ ModelDecHead(mods, Id(from), meta) -> ModelDecHead(mods, Id(to), meta)  
                                           where <hashtable-get(|from)> renamings => to \)
 
-  rename-languagedec(|renamings) = topdown(try(rename-java(|renamings)))
+  rename-languagedec(|renamings) = bottomupS(try(rename-java(|renamings)), rename-languagedec-stop)
+  rename-languagedec-stop(fix) = ?TypeImportDec(_) + ?TypeImportAsDec(_,_) + ?TransImportDec(_,_) + ?TypeExportDec(_,_) + ?TransExportDec(_,_) 
   
 rules
   rename-java(|renamings) :

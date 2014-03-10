@@ -24,3 +24,6 @@ signature constructors
     TransImportDec : Option(ImportAs) * TransformationExpr -> JavaImportDec
     TypeImportAsDec : ImportAs * JavaTypeName -> JavaImportDec
     ImportAs : JavaTypeName -> ImportAs
+
+    TypeExportDec : JavaId * ModuleName -> JavaImportDec
+    TransExportDec : JavaId * TransformationAppExpr -> JavaImportDec
