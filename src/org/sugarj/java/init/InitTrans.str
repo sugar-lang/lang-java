@@ -24,7 +24,7 @@ rules
 		<concat-strings>[sname,"(",sparams,"): ",sresult]
 	where
 		sresult := <show-type> result;
-		sparams := <debug; map(show-param); intersperse(|","); concat-strings> params
+		sparams := <map(show-param); intersperse(|","); concat-strings> params
 	
 	show-vardec : VarDec(Id(name)) -> name
 	show-vardec : VarDec(Id(name), _) -> name
