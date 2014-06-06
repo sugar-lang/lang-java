@@ -52,18 +52,6 @@ folding
   JavaNewInstance
   JavaQNewInstance
 
-outliner
-  ToplevelDeclaration
-  SugarDec
-  JavaFieldDec
-  JavaMethodDec    
-  JavaClassDec     
-  JavaInterfaceDec
-  JavaEnumDec 
-  JavaConstrDec
-  JavaNewInstance
-  JavaQNewInstance
-
   completions SDF
     completion template : SugarDefElem =
       "context-free syntax" "\n\t" (blank)
