@@ -16,8 +16,8 @@ import org.spoofax.interpreter.terms.IStrategoTerm;
 import org.spoofax.interpreter.terms.ITermFactory;
 import org.spoofax.terms.Term;
 import org.strategoxt.HybridInterpreter;
+import org.sugarj.baselang.IORelay;
 import org.sugarj.common.ATermCommands;
-import org.sugarj.common.Environment;
 import org.sugarj.common.FileCommands;
 import org.sugarj.common.JavaCommands;
 import org.sugarj.common.Log;
@@ -34,7 +34,7 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
   private List<String> imports = new LinkedList<String>();
   private List<String> body = new LinkedList<String>();
 
-  private Environment environment;
+  private IORelay environment;
   private RelativePath sourceFile;
   private Path javaOutFile;
 
@@ -139,7 +139,7 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
   }
 
   @Override
-  public void init(Set<RelativePath> sourceFiles, Environment environment) {
+  public void init(Set<RelativePath> sourceFiles, IORelay environment) {
     if (sourceFiles.size() != 1)
       throw new IllegalArgumentException("Fomega can only compile one source file at a time.");
 
