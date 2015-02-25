@@ -25,7 +25,7 @@ public class JavaLanguage extends AbstractBaseLanguage {
   
   private static JavaLanguage instance = new JavaLanguage();
 
-  Context javaFronCtx = java_front.init();
+  private transient Context javaFronCtx;
 
   public static JavaLanguage getInstance() {
     return instance;
@@ -175,6 +175,9 @@ public class JavaLanguage extends AbstractBaseLanguage {
    * @param aterm
    */
   protected synchronized String prettyPrint(IStrategoTerm term) {
+    if (javaFronCtx == null)
+      javaFronCtx = java_front.init();
+    
     IStrategoTerm string = pp_java_string_0_0.instance.invoke(javaFronCtx, term);
     if (string != null)
       return Term.asJavaString(string);
