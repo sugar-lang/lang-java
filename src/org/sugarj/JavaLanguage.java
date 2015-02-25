@@ -19,6 +19,8 @@ import org.sugarj.common.path.Path;
 
 public class JavaLanguage extends AbstractBaseLanguage {
 
+  private static final long serialVersionUID = 8910515483994243636L;
+
   private JavaLanguage() { }
   
   private static JavaLanguage instance = new JavaLanguage();
