@@ -4,7 +4,6 @@ import static org.sugarj.common.ATermCommands.getApplicationSubterm;
 import static org.sugarj.common.ATermCommands.isApplication;
 import static org.sugarj.common.Log.log;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -202,7 +201,7 @@ public class JavaProcessor extends AbstractBaseProcessor implements Serializable
   private String getRelativeModulePath(String module) {
     if (module == null)
       return null;
-    return module.replace(".", File.separator);
+    return module.replace(".", "/");
   }
   
   @Override
